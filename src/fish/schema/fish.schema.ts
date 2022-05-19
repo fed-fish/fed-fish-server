@@ -33,7 +33,12 @@ export class Fish {
 	@Prop({
 		default: false,
 	})
-	public feedingStatus: boolean;
+	public fedUp: boolean;
+
+	@Prop({
+		default: false,
+	})
+	public withholdedUp: boolean;
 }
 
 export type FishDocument = Fish & mongoose.Document;

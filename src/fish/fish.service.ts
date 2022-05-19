@@ -4,12 +4,27 @@ import {
 	Injectable,
 } from "@nestjs/common";
 
+import {
+	Model,
+	ObjectId,
+} from "mongoose";
+
 import { InjectModel } from "@nestjs/mongoose";
-import { Model, ObjectId } from "mongoose";
 
 import { AddFishDto } from "./dto/add-fish.dto";
 import { UpdateFishDto } from "./dto/update-fish.dto";
 import { Fish, FishDocument } from "./schema/fish.schema";
+
+
+export interface ConditionedFish {
+	fish: Fish;
+	warning: FeedingWarning;
+}
+
+const enum FeedingWarning {
+	FedUp = 'Already fed up',
+	WitholdedUp = 'Already witholded up',
+}
 
 @Injectable()
 export class FishService{
@@ -40,7 +55,7 @@ export class FishService{
 		return fish;
 	}
 
-	public async updateFish(id: ObjectId, dto: UpdateFishDto): Promise<Fish> {
+	public async updateFish(id: ObjectId, dto: UpdateFishDto): Promise<Fish | ConditionedFish> {
 		const fishToUpdate = await this._fishModel.findById(id);
 
 		if (fishToUpdate === null) {
@@ -49,42 +64,7 @@ export class FishService{
 
 		const { feedingStatus } = dto;
 
-		const {
-			feedingDays,
-			withholdingDays,
-		} = fishToUpdate;
-
-		let {
-			fedDays,
-			withholdedDays,
-		} = fishToUpdate;
-
-		if (feedingStatus) {
-			fedDays++;
-
-			if (fedDays >= feedingDays) {
-				withholdedDays = 0;
-			}
-		}
-
-		if (!feedingStatus) {
-			withholdedDays++;
-
-			if (withholdedDays >= withholdingDays) {
-				fedDays = 0;
-			}
-		}
-
-		await fishToUpdate.update(
-			id,
-			{
-				feedingStatus,
-				fedDays,
-				withholdedDays,
-			},
-		);
-
-		return fishToUpdate;
+		return await this._updateDays(feedingStatus, fishToUpdate).save();
 	}
 
 	public async deleteFish(id: ObjectId): Promise<ObjectId> {
@@ -97,6 +77,30 @@ export class FishService{
 		await fishToDelete.delete();
 
 		return fishToDelete._id;
+	}
+
+	private _updateDays(feedingStatus: boolean, fish: FishDocument): FishDocument {
+		if (feedingStatus) {
+			fish.fedDays += 1;
+			fish.withholdedDays = 0;
+
+			if (fish.fedDays > fish.feedingDays) {
+				fish.fedUp = true;
+				fish.withholdedUp = false;
+			}
+		}
+
+		if (!feedingStatus) {
+			fish.withholdedDays += 1;
+			fish.fedDays = 0;
+
+			if (fish.withholdedDays > fish.withholdingDays) {
+				fish.withholdedUp = true;
+				fish.fedUp = false;
+			}
+		}
+
+		return fish;
 	}
 }
 

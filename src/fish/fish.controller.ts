@@ -12,7 +12,7 @@ import { ObjectId } from "mongoose";
 
 import { AddFishDto } from "./dto/add-fish.dto";
 import { UpdateFishDto } from "./dto/update-fish.dto";
-import { FishService } from "./fish.service";
+import { ConditionedFish, FishService } from "./fish.service";
 import { Fish } from "./schema/fish.schema";
 
 @Controller('/fish')
@@ -49,7 +49,7 @@ export class FishController {
 
 		@Body()
 		dto: UpdateFishDto
-	): Promise<Fish> {
+	): Promise<Fish | ConditionedFish> {
 		return await this._fishService.updateFish(id, dto);
 	}
 
