@@ -1,7 +1,11 @@
-import { Injectable } from "@nestjs/common";
+import {
+	HttpException,
+	HttpStatus,
+	Injectable,
+} from "@nestjs/common";
 
 import { InjectModel } from "@nestjs/mongoose";
-import { Model } from "mongoose";
+import { Model, ObjectId } from "mongoose";
 
 import { AddFishDto } from "./dto/add-fish.dto";
 import { Fish, FishDocument } from "./schema/fish.schema";
@@ -21,6 +25,19 @@ export class FishService{
 
 	public async fish(): Promise<Fish[]> {
 		const fish = await this._fishModel.find();
+
+		return fish;
+	}
+
+	public async fishInfo(id: ObjectId): Promise<Fish> {
+		const fish = await this._fishModel.findById(id);
+
+		if (fish === null) {
+			throw new HttpException(
+				'Fish not found',
+				HttpStatus.BAD_REQUEST
+			);
+		}
 
 		return fish;
 	}
