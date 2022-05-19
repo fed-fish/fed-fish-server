@@ -1,6 +1,7 @@
 import {
 	Body,
 	Controller,
+	Get,
 	Post,
 } from "@nestjs/common";
 
@@ -20,5 +21,10 @@ export class FishController {
 		dto: AddFishDto
 	): Promise<Fish> {
 		return await this._fishService.addFish(dto);
+	}
+
+	@Get()
+	public async fish(): Promise<Fish[]> {
+		return await this._fishService.fish();
 	}
 }

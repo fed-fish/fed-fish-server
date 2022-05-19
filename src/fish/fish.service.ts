@@ -1,4 +1,5 @@
 import { Injectable } from "@nestjs/common";
+
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
 
@@ -16,5 +17,11 @@ export class FishService{
 		const newFish = await this._fishModel.create({ ...dto });
 
 		return newFish;
+	}
+
+	public async fish(): Promise<Fish[]> {
+		const fish = await this._fishModel.find();
+
+		return fish;
 	}
 }
