@@ -47,9 +47,41 @@ export class FishService{
 			makeFishNotFoundError();
 		}
 
+		const { feedingStatus } = dto;
+
+		const {
+			feedingDays,
+			withholdingDays,
+		} = fishToUpdate;
+
+		let {
+			fedDays,
+			withholdedDays,
+		} = fishToUpdate;
+
+		if (feedingStatus) {
+			fedDays++;
+
+			if (fedDays >= feedingDays) {
+				withholdedDays = 0;
+			}
+		}
+
+		if (!feedingStatus) {
+			withholdedDays++;
+
+			if (withholdedDays >= withholdingDays) {
+				fedDays = 0;
+			}
+		}
+
 		await fishToUpdate.update(
 			id,
-			{ ...dto },
+			{
+				feedingStatus,
+				fedDays,
+				withholdedDays,
+			},
 		);
 
 		return fishToUpdate;
