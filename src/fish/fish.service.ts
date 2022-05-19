@@ -47,12 +47,24 @@ export class FishService{
 			makeFishNotFoundError();
 		}
 
-		fishToUpdate.update(
+		await fishToUpdate.update(
 			id,
 			{ ...dto },
 		);
 
 		return fishToUpdate;
+	}
+
+	public async deleteFish(id: ObjectId): Promise<ObjectId> {
+		const fishToDelete = await this._fishModel.findById(id);
+
+		if (fishToDelete === null) {
+			makeFishNotFoundError();
+		}
+
+		await fishToDelete.delete();
+
+		return fishToDelete._id;
 	}
 }
 

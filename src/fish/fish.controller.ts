@@ -1,6 +1,7 @@
 import {
 	Body,
 	Controller,
+	Delete,
 	Get,
 	Param,
 	Patch,
@@ -10,7 +11,7 @@ import {
 import { ObjectId } from "mongoose";
 
 import { AddFishDto } from "./dto/add-fish.dto";
-import {UpdateFishDto} from "./dto/update-fish.dto";
+import { UpdateFishDto } from "./dto/update-fish.dto";
 import { FishService } from "./fish.service";
 import { Fish } from "./schema/fish.schema";
 
@@ -50,5 +51,13 @@ export class FishController {
 		dto: UpdateFishDto
 	): Promise<Fish> {
 		return await this._fishService.updateFish(id, dto);
+	}
+
+	@Delete('/:id')
+	public async deleteFish(
+		@Param('id')
+		id: ObjectId
+	): Promise<ObjectId> {
+		return await this._fishService.deleteFish(id);
 	}
 }
