@@ -3,12 +3,14 @@ import {
 	Controller,
 	Get,
 	Param,
+	Patch,
 	Post,
 } from "@nestjs/common";
 
 import { ObjectId } from "mongoose";
 
 import { AddFishDto } from "./dto/add-fish.dto";
+import {UpdateFishDto} from "./dto/update-fish.dto";
 import { FishService } from "./fish.service";
 import { Fish } from "./schema/fish.schema";
 
@@ -37,5 +39,16 @@ export class FishController {
 		id: ObjectId
 	): Promise<Fish> {
 		return await this._fishService.fishInfo(id);
+	}
+
+	@Patch('/:id')
+	public async updateFish(
+		@Param('id')
+		id: ObjectId,
+
+		@Body()
+		dto: UpdateFishDto
+	): Promise<Fish> {
+		return await this._fishService.updateFish(id, dto);
 	}
 }

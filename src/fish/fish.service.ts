@@ -8,6 +8,7 @@ import { InjectModel } from "@nestjs/mongoose";
 import { Model, ObjectId } from "mongoose";
 
 import { AddFishDto } from "./dto/add-fish.dto";
+import { UpdateFishDto } from "./dto/update-fish.dto";
 import { Fish, FishDocument } from "./schema/fish.schema";
 
 @Injectable()
@@ -33,12 +34,31 @@ export class FishService{
 		const fish = await this._fishModel.findById(id);
 
 		if (fish === null) {
-			throw new HttpException(
-				'Fish not found',
-				HttpStatus.BAD_REQUEST
-			);
+			makeFishNotFoundError();
 		}
 
 		return fish;
 	}
+
+	public async updateFish(id: ObjectId, dto: UpdateFishDto): Promise<Fish> {
+		const fishToUpdate = await this._fishModel.findById(id);
+
+		if (fishToUpdate === null) {
+			makeFishNotFoundError();
+		}
+
+		fishToUpdate.update(
+			id,
+			{ ...dto },
+		);
+
+		return fishToUpdate;
+	}
+}
+
+function makeFishNotFoundError(): never {
+	throw new HttpException(
+		'Fish not found',
+		HttpStatus.BAD_REQUEST
+	);
 }
