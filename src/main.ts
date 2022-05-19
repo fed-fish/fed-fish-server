@@ -1,6 +1,7 @@
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { config } from 'dotenv';
+import { createDocumentation } from './api-docs/config';
 
 import { AppModule } from './app.module';
 
@@ -16,6 +17,8 @@ async function bootstrap(): Promise<void> {
 	});
 
 	app.useGlobalPipes(new ValidationPipe);
+
+	createDocumentation(app);
 
 	await app.listen(port, () => {
 		console.log(`Server started on port ${port}`);

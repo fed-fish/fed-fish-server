@@ -15,17 +15,6 @@ import { AddFishDto } from "./dto/add-fish.dto";
 import { UpdateFishDto } from "./dto/update-fish.dto";
 import { Fish, FishDocument } from "./schema/fish.schema";
 
-
-export interface ConditionedFish {
-	fish: Fish;
-	warning: FeedingWarning;
-}
-
-const enum FeedingWarning {
-	FedUp = 'Already fed up',
-	WitholdedUp = 'Already witholded up',
-}
-
 @Injectable()
 export class FishService{
 	public constructor(
@@ -55,7 +44,7 @@ export class FishService{
 		return fish;
 	}
 
-	public async updateFish(id: ObjectId, dto: UpdateFishDto): Promise<Fish | ConditionedFish> {
+	public async updateFish(id: ObjectId, dto: UpdateFishDto): Promise<Fish> {
 		const fishToUpdate = await this._fishModel.findById(id);
 
 		if (fishToUpdate === null) {
