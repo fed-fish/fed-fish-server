@@ -1,9 +1,11 @@
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { config } from 'dotenv';
+
 import { createDocumentation } from './api-docs/config';
 
 import { AppModule } from './app.module';
+import { makeDomainWhitelist } from './domains-whitelist';
 
 config();
 
@@ -13,7 +15,7 @@ async function bootstrap(): Promise<void> {
 	const app = await NestFactory.create(AppModule);
 
 	app.enableCors({
-		origin: process.env.CLIENT_URL,
+		origin: makeDomainWhitelist(),
 	});
 
 	app.useGlobalPipes(new ValidationPipe);

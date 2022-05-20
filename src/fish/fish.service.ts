@@ -73,7 +73,7 @@ export class FishService{
 			fish.fedDays += 1;
 			fish.withholdedDays = 0;
 
-			if (fish.fedDays > fish.feedingDays) {
+			if (fish.fedDays >= fish.feedingDays) {
 				fish.fedUp = true;
 				fish.withholdedUp = false;
 			}
@@ -83,7 +83,7 @@ export class FishService{
 			fish.withholdedDays += 1;
 			fish.fedDays = 0;
 
-			if (fish.withholdedDays > fish.withholdingDays) {
+			if (fish.withholdedDays >= fish.withholdingDays) {
 				fish.withholdedUp = true;
 				fish.fedUp = false;
 			}
