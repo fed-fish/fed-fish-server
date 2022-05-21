@@ -7,7 +7,19 @@ import { ApiProperty } from '@nestjs/swagger';
 
 import mongoose from "mongoose";
 
-@Schema()
+export const enum FeedingAction {
+	Fed = 'Fed',
+	Withholded = 'Withholded',
+}
+
+interface HistoryAction {
+	actionType: FeedingAction;
+	time: string;
+}
+
+@Schema({
+	timestamps: true,
+})
 export class Fish {
 	@ApiProperty({
 		description: 'Fish name',
@@ -80,6 +92,18 @@ export class Fish {
 		default: '#75b585',
 	})
 	public color: string;
+
+	@ApiProperty({
+		description: 'History of feeding',
+		example: [
+			{
+				actionType: 'Fed',
+				time: '2022-02-26T16:37:48.244Z',
+			},
+		],
+	})
+	@Prop()
+	public feedingHistory: HistoryAction[];
 }
 
 export type FishDocument = Fish & mongoose.Document;

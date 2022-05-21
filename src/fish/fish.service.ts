@@ -13,7 +13,7 @@ import { InjectModel } from "@nestjs/mongoose";
 
 import { AddFishDto } from "./dto/add-fish.dto";
 import { UpdateFishDto } from "./dto/update-fish.dto";
-import { Fish, FishDocument } from "./schema/fish.schema";
+import { FeedingAction, Fish, FishDocument } from "./schema/fish.schema";
 
 @Injectable()
 export class FishService{
@@ -53,6 +53,10 @@ export class FishService{
 
 		const { feedingStatus } = dto;
 
+		if (fishToUpdate.feedingHistory.length >= 20) {
+			fishToUpdate.feedingHistory.splice(0, 1);
+		}
+
 		return await this._updateDays(feedingStatus, fishToUpdate).save();
 	}
 
@@ -77,6 +81,11 @@ export class FishService{
 				fish.fedUp = true;
 				fish.withholdedUp = false;
 			}
+
+			fish.feedingHistory.push({
+				actionType: FeedingAction.Fed,
+				time: new Date().toISOString(),
+			});
 		}
 
 		if (!feedingStatus) {
@@ -87,6 +96,11 @@ export class FishService{
 				fish.withholdedUp = true;
 				fish.fedUp = false;
 			}
+
+			fish.feedingHistory.push({
+				actionType: FeedingAction.Withholded,
+				time: new Date().toISOString(),
+			});
 		}
 
 		return fish;
