@@ -1,5 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNumber, IsString } from "class-validator";
+
+import {
+	IsHexColor,
+	IsNumber,
+	IsString,
+} from "class-validator";
 
 export class AddFishDto {
 	@ApiProperty({
@@ -41,4 +46,12 @@ export class AddFishDto {
 	})
 	@IsNumber()
 	public readonly withholdedDays: number;
+
+	@ApiProperty({
+		description: 'Fish card color',
+		required: false,
+		example: '#ffffff',
+	})
+	@IsHexColor()
+	public readonly color: string;
 }

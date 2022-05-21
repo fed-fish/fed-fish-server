@@ -70,6 +70,16 @@ export class Fish {
 		default: false,
 	})
 	public withholdedUp: boolean;
+
+	@ApiProperty({
+		description: 'Fish card color',
+		default: '#75b585',
+		example: '#75b585',
+	})
+	@Prop({
+		default: '#75b585',
+	})
+	public color: string;
 }
 
 export type FishDocument = Fish & mongoose.Document;
