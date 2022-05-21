@@ -1,6 +1,7 @@
 const domainWhitelist = [
-	process.env.CLIENT_NETWORK_URL,
-	process.env.CLIENT_URL,
+	process.env.CLIENT_LOCAL_NETWORK_URL,
+	process.env.CLIENT_LOCAL_URL,
+	process.env.CLIENT_DEPLOY_URL,
 ];
 
 export function makeDomainWhitelist(): string[] {
