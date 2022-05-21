@@ -3,6 +3,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import {
 	IsHexColor,
 	IsNumber,
+	IsOptional,
 	IsString,
 } from "class-validator";
 
@@ -52,6 +53,7 @@ export class AddFishDto {
 		required: false,
 		example: '#ffffff',
 	})
-	@IsHexColor()
+	@IsOptional()
+	@IsHexColor({})
 	public readonly color: string;
 }
